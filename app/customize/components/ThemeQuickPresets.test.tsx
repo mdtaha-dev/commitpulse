@@ -50,3 +50,27 @@ describe('ThemeQuickPresets', () => {
     expect(onThemeChange).toHaveBeenCalledWith(inactiveKey);
   });
 });
+
+describe('ThemeQuickPresets — responsive rendering and accessible color palettes', () => {
+  const onThemeChange = vi.fn();
+
+  beforeEach(() => {
+    onThemeChange.mockClear();
+  });
+
+  it('renders buttons inside a flex container for responsive layout', () => {
+    const { container } = render(<ThemeQuickPresets theme="dark" onThemeChange={onThemeChange} />);
+    const wrapper = container.querySelector('div');
+    expect(wrapper).not.toBeNull();
+    expect(wrapper!.style.display).toBe('flex');
+    expect(wrapper!.style.flexWrap).toBe('wrap');
+  });
+
+  it('highcontrast theme button is present and accessible', () => {
+    render(<ThemeQuickPresets theme="highcontrast" onThemeChange={onThemeChange} />);
+    const btn = screen.getByRole('button', { name: /apply highcontrast theme/i });
+    expect(btn).toBeDefined();
+    expect(btn.getAttribute('aria-pressed')).toBe('true');
+    expect(btn.getAttribute('aria-label')).toBe('Apply highcontrast theme');
+  });
+});
